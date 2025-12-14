@@ -1,0 +1,160 @@
+/* Dashboard Component */
+.dashboard {
+  padding: 1.5rem;
+  min-height: 100vh;
+  animation: fadein 0.5s;
+}
+
+.dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard__title {
+  color: #ffffff;
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.dashboard__grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.dashboard__grid-item {
+  grid-column: span 12;
+}
+
+@media (min-width: 768px) {
+  .dashboard__grid-item {
+    grid-column: span 6;
+  }
+}
+
+@media (min-width: 1024px) {
+  .dashboard__grid-item {
+    grid-column: span 4;
+  }
+}
+
+.dashboard__empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.dashboard__empty-state-icon {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  color: #57534e;
+  margin-bottom: 1rem;
+}
+
+.dashboard__empty-state-message {
+  color: #a8a29e;
+}
+
+.dashboard__empty-state-button {
+  margin-top: 0.5rem;
+}
+
+/* Routine Card Component */
+.routine-card {
+  height: 100%;
+  border-radius: 1rem;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.routine-card:hover {
+  transform: scale(1.02);
+}
+
+.routine-card__content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.routine-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.routine-card__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.routine-card__actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.routine-card__edit-button {
+  /* Styled by Material theme */
+}
+
+.routine-card__delete-button {
+  /* Styled by Material theme */
+}
+
+.routine-card__body {
+  flex-grow: 1;
+  color: #a8a29e;
+  margin-bottom: 1.5rem;
+}
+
+.routine-card__exercise-count {
+  margin-bottom: 0.5rem;
+}
+
+.routine-card__exercise-list {
+  padding-left: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+.routine-card__exercise-item {
+  /* Default list item styling */
+}
+
+.routine-card__exercise-more {
+  list-style: none;
+  font-style: italic;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.routine-card__start-button {
+  width: 100%;
+  background: #44403c !important;
+  border: 1px solid #57534e !important;
+  color: #fafaf9 !important;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+.routine-card__start-button:hover:not([disabled]) {
+  background: #57534e !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

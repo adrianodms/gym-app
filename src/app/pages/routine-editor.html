@@ -1,0 +1,72 @@
+<div class="routine-editor">
+    <div class="routine-editor__header">
+        <h1 class="routine-editor__title">{{ isNew ? 'Criar' : 'Editar' }} Treino</h1>
+        <div class="routine-editor__actions">
+            <button mat-button (click)="cancel()" class="routine-editor__cancel-button">Cancelar</button>
+            <button mat-raised-button class="routine-editor__save-button" (click)="saveRoutine()"
+                [disabled]="!routine.name">
+                <mat-icon>check</mat-icon>
+                Salvar Treino
+            </button>
+        </div>
+    </div>
+
+    <!-- Routine Name -->
+    <div class="routine-editor__form">
+        <mat-form-field appearance="fill" class="routine-editor__name-field">
+            <mat-label>Nome do Treino</mat-label>
+            <input matInput id="routineName" [(ngModel)]="routine.name" placeholder="ex: Costas e Bíceps">
+        </mat-form-field>
+    </div>
+
+    <!-- Exercises List -->
+    <mat-card class="exercise-list">
+        <mat-card-content>
+            <div class="exercise-list__header">
+                <h2 class="exercise-list__title">Exercícios</h2>
+                <button mat-raised-button color="accent" (click)="openNewExerciseDialog()"
+                    class="exercise-list__add-button">
+                    <mat-icon>add</mat-icon>
+                    Novo
+                </button>
+            </div>
+
+            <div *ngIf="routine.exercises.length === 0" class="exercise-list__empty">
+                Nenhum exercício adicionado. Use o botão para adicionar.
+            </div>
+
+            <div *ngIf="routine.exercises.length > 0" class="exercise-list__items">
+                <div *ngFor="let exercise of routine.exercises; let i = index" class="exercise-item">
+                    <div class="exercise-item__header">
+                        <span class="exercise-item__name">{{ exercise.name }}</span>
+                        <button mat-icon-button color="warn" (click)="deleteExercise(i)"
+                            class="exercise-item__delete-button">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+
+                    <div class="exercise-item__form">
+                        <div class="exercise-item__field">
+                            <label class="exercise-item__field-label">Séries</label>
+                            <mat-form-field appearance="fill">
+                                <input matInput type="number" [(ngModel)]="exercise.sets" [min]="1" [max]="20">
+                            </mat-form-field>
+                        </div>
+                        <div class="exercise-item__field">
+                            <label class="exercise-item__field-label">Reps</label>
+                            <mat-form-field appearance="fill">
+                                <input matInput type="number" [(ngModel)]="exercise.reps" [min]="1" [max]="100">
+                            </mat-form-field>
+                        </div>
+                        <div class="exercise-item__field">
+                            <label class="exercise-item__field-label">Carga</label>
+                            <mat-form-field appearance="fill">
+                                <input matInput type="number" [(ngModel)]="exercise.targetWeight" placeholder="kg">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

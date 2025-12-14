@@ -1,0 +1,54 @@
+<div class="dashboard">
+  <div class="dashboard__header">
+    <h1 class="dashboard__title">Meus Treinos</h1>
+    <button mat-raised-button color="accent" (click)="createRoutine()">
+      <mat-icon>add</mat-icon>
+      Novo
+    </button>
+  </div>
+
+  <div class="dashboard__grid">
+    <div *ngFor="let routine of routines; let i = index" class="dashboard__grid-item">
+      <mat-card class="routine-card">
+        <mat-card-content class="routine-card__content">
+          <div class="routine-card__header">
+            <span class="routine-card__title">{{ routine.name }}</span>
+            <div class="routine-card__actions">
+              <button mat-icon-button (click)="editRoutine(routine.id, $event)" class="routine-card__edit-button">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteRoutine(routine.id, $event)"
+                class="routine-card__delete-button">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="routine-card__body">
+            <div *ngIf="routine.exercises.length === 0" class="routine-card__exercise-count">Sem exercícios</div>
+            <div *ngIf="routine.exercises.length > 0" class="routine-card__exercise-count">{{ routine.exercises.length
+              }} Exercícios</div>
+            <ul *ngIf="routine.exercises.length > 0" class="routine-card__exercise-list">
+              <li *ngFor="let ex of routine.exercises.slice(0,3)" class="routine-card__exercise-item">{{ ex.name }}</li>
+              <li *ngIf="routine.exercises.length > 3" class="routine-card__exercise-more">+ {{ routine.exercises.length
+                - 3 }} mais</li>
+            </ul>
+          </div>
+
+          <button mat-flat-button class="routine-card__start-button" (click)="startWorkout(routine.id)">
+            <mat-icon>play_arrow</mat-icon>
+            Iniciar Treino
+          </button>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div *ngIf="routines.length === 0" class="dashboard__empty-state">
+      <mat-icon class="dashboard__empty-state-icon">edit_note</mat-icon>
+      <p class="dashboard__empty-state-message">Nenhum treino encontrado. Crie seu primeiro plano de treino!</p>
+      <button mat-raised-button color="primary" (click)="createRoutine()" class="dashboard__empty-state-button">
+        Criar Treino
+      </button>
+    </div>
+  </div>
+</div>

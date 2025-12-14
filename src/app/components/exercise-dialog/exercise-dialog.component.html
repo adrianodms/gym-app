@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+
+<mat-dialog-content>
+    <mat-form-field appearance="fill" class="exercise-dialog__field">
+        <mat-label>Nome do Exercício</mat-label>
+        <input matInput [(ngModel)]="exercise.name" placeholder="ex: Supino Reto" autofocus>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="exercise-dialog__field">
+        <mat-label>Descanso Sugerido (seg)</mat-label>
+        <input matInput type="number" [(ngModel)]="exercise.suggestedRestTime" [min]="0" [step]="10">
+    </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!exercise.name">
+        Salvar
+    </button>
+</mat-dialog-actions>

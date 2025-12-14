@@ -1,0 +1,82 @@
+<div *ngIf="routine" class="workout-runner">
+
+    <!-- Header -->
+    <div class="workout-runner__header">
+        <button mat-icon-button (click)="finishWorkout()" class="workout-runner__close-button">
+            <mat-icon>close</mat-icon>
+        </button>
+        <div class="workout-runner__progress">{{ currentExerciseIndex + 1 }} / {{ routine.exercises.length }}</div>
+        <button mat-icon-button color="accent" (click)="finishWorkout()" class="workout-runner__finish-button">
+            <mat-icon>check</mat-icon>
+        </button>
+    </div>
+
+    <!-- Rest Timer Overlay -->
+    <div *ngIf="isResting" class="rest-timer">
+        <div class="rest-timer__overlay">
+            <h2 class="rest-timer__title">DESCANSO</h2>
+
+            <div class="rest-timer__spinner-container">
+                <mat-progress-spinner mode="determinate" [value]="(restTime / initialRestTime) * 100" [diameter]="250"
+                    [strokeWidth]="12" color="primary" class="rest-timer__spinner">
+                </mat-progress-spinner>
+                <div class="rest-timer__time">{{ restTime }}s</div>
+            </div>
+
+            <div class="rest-timer__actions">
+                <button mat-stroked-button (click)="addRestTime()" class="rest-timer__add-time-button">+10s</button>
+                <button mat-raised-button color="warn" (click)="skipRest()"
+                    class="rest-timer__skip-button">Pular</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Exercise -->
+    <div class="workout-runner__content">
+        <h1 class="workout-runner__exercise-title">{{ routine.exercises[currentExerciseIndex].name }}</h1>
+        <div class="workout-runner__exercise-meta">
+            Meta: {{ routine.exercises[currentExerciseIndex].sets }} x {{ routine.exercises[currentExerciseIndex].reps
+            }}
+        </div>
+
+        <!-- Sets -->
+        <div class="set-list">
+            <div *ngFor="let set of activeExerciseSets; let i = index" [class.set-list__item--completed]="set.completed"
+                class="set-list__item">
+
+                <div class="set-list__number">{{ i + 1 }}</div>
+
+                <div class="set-list__form">
+                    <div class="set-list__field">
+                        <label class="set-list__field-label">Carga</label>
+                        <mat-form-field appearance="fill" class="set-list__field-input">
+                            <input matInput type="number" [(ngModel)]="set.weight"
+                                [class.set-list__input--completed]="set.completed" [disabled]="set.completed">
+                        </mat-form-field>
+                    </div>
+                    <div class="set-list__field">
+                        <label class="set-list__field-label">Reps</label>
+                        <mat-form-field appearance="fill" class="set-list__field-input">
+                            <input matInput type="number" [(ngModel)]="set.reps"
+                                [class.set-list__input--completed]="set.completed" [disabled]="set.completed">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <button mat-fab [class.set-list__complete-button--done]="set.completed"
+                    class="set-list__complete-button" (click)="toggleSetCompletion(i)">
+                    <mat-icon>{{ set.completed ? 'replay' : 'check' }}</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="workout-runner__navigation">
+        <button mat-button [disabled]="currentExerciseIndex === 0" (click)="prevExercise()"
+            class="workout-runner__prev-button">Anterior</button>
+        <button mat-raised-button (click)="nextExercise()" class="workout-runner__next-button">
+            {{ currentExerciseIndex === routine.exercises.length - 1 ? 'Finalizar' : 'Próximo' }}
+        </button>
+    </div>
+</div>
