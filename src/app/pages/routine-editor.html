@@ -15,7 +15,7 @@
     <div class="routine-editor__form">
         <mat-form-field appearance="fill" class="routine-editor__name-field">
             <mat-label>Nome do Treino</mat-label>
-            <input matInput id="routineName" [(ngModel)]="routine.name" placeholder="ex: Costas e Bíceps">
+            <input matInput id="routineName" [(ngModel)]="routine().name" placeholder="ex: Costas e Bíceps">
         </mat-form-field>
     </div>
 
@@ -31,15 +31,19 @@
                 </button>
             </div>
 
-            <div *ngIf="routine.exercises.length === 0" class="exercise-list__empty">
+            @if (routine().exercises.length === 0) {
+            <div class="exercise-list__empty">
                 Nenhum exercício adicionado. Use o botão para adicionar.
             </div>
+            }
 
-            <div *ngIf="routine.exercises.length > 0" class="exercise-list__items">
-                <div *ngFor="let exercise of routine.exercises; let i = index" class="exercise-item">
+            @if (routine().exercises.length > 0) {
+            <div class="exercise-list__items">
+                @for (exercise of routine().exercises; track $index) {
+                <div class="exercise-item">
                     <div class="exercise-item__header">
                         <span class="exercise-item__name">{{ exercise.name }}</span>
-                        <button mat-icon-button color="warn" (click)="deleteExercise(i)"
+                        <button mat-icon-button color="warn" (click)="deleteExercise($index)"
                             class="exercise-item__delete-button">
                             <mat-icon>delete</mat-icon>
                         </button>
@@ -61,12 +65,15 @@
                         <div class="exercise-item__field">
                             <label class="exercise-item__field-label">Carga</label>
                             <mat-form-field appearance="fill">
-                                <input matInput type="number" [(ngModel)]="exercise.targetWeight" placeholder="kg">
+                                <input matInput type="number" [step]="0.5" [(ngModel)]="exercise.targetWeight"
+                                    placeholder="kg">
                             </mat-form-field>
                         </div>
                     </div>
                 </div>
+                }
             </div>
+            }
         </mat-card-content>
     </mat-card>
 </div>

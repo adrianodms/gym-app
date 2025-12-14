@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -20,20 +20,16 @@ import { ConfirmDialogComponent } from '../components/confirm-dialog/confirm-dia
     MatIconModule
   ],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.scss'
+  styleUrl: './dashboard.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent implements OnInit {
-  routines: Routine[] = [];
+export class DashboardComponent {
+  private readonly gymService = inject(GymService);
+  private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
 
-  constructor(
-    private gymService: GymService,
-    private router: Router,
-    private dialog: MatDialog
-  ) {}
-
-  ngOnInit(): void {
-    this.routines = this.gymService.getRoutines();
-  }
+  // Directly expose the signal from the service
+  readonly routines = this.gymService.routines;
 
   createRoutine() {
     this.router.navigate(['/editor/new']);
@@ -61,12 +57,10 @@ export class DashboardComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
         console.log('User confirmed deletion');
         this.gymService.deleteRoutine(id);
-        this.routines = this.gymService.getRoutines();
-        console.log('Routines after deletion:', this.routines);
       }
     });
   }

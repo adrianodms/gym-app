@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -24,19 +24,17 @@ export interface ExerciseDialogData {
     MatButtonModule
   ],
   templateUrl: './exercise-dialog.component.html',
-  styleUrl: './exercise-dialog.component.scss'
+  styleUrl: './exercise-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExerciseDialogComponent {
-  exercise: Exercise;
+  readonly dialogRef = inject(MatDialogRef<ExerciseDialogComponent>);
+  readonly data = inject<ExerciseDialogData>(MAT_DIALOG_DATA);
 
-  constructor(
-    public dialogRef: MatDialogRef<ExerciseDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ExerciseDialogData
-  ) {
-    this.exercise = data.exercise 
-      ? { ...data.exercise }
+  // Initialize state from injected data
+  readonly exercise: Exercise = this.data.exercise 
+      ? { ...this.data.exercise }
       : { name: '', sets: 3, reps: 10, suggestedRestTime: 60 };
-  }
 
   onCancel(): void {
     this.dialogRef.close();

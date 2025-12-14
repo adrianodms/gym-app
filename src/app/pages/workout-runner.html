@@ -50,7 +50,7 @@
                     <div class="set-list__field">
                         <label class="set-list__field-label">Carga</label>
                         <mat-form-field appearance="fill" class="set-list__field-input">
-                            <input matInput type="number" [(ngModel)]="set.weight"
+                            <input matInput type="number" [step]="0.5" [(ngModel)]="set.weight"
                                 [class.set-list__input--completed]="set.completed" [disabled]="set.completed">
                         </mat-form-field>
                     </div>

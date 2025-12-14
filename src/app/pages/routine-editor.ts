@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -28,35 +28,34 @@ import { ExerciseDialogComponent } from '../components/exercise-dialog/exercise-
     MatIconModule
   ],
   templateUrl: './routine-editor.html',
-  styleUrl: './routine-editor.scss'
+  styleUrl: './routine-editor.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RoutineEditorComponent implements OnInit {
-  routine: Routine = { id: '', name: '', exercises: [] };
-  isNew = true;
+  private readonly gymService = inject(GymService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
 
-  constructor(
-    private gymService: GymService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private dialog: MatDialog
-  ) {}
+  routine = signal<Routine>({ id: '', name: '', exercises: [] });
+  isNew = true;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id && id !== 'new') {
       const existing = this.gymService.getRoutine(id);
       if (existing) {
-        this.routine = JSON.parse(JSON.stringify(existing)); // Deep copy
+        this.routine.set(JSON.parse(JSON.stringify(existing))); // Deep copy
         this.isNew = false;
       }
     } else {
-      this.routine.id = uuidv4();
+      this.routine.set({ id: uuidv4(), name: '', exercises: [] });
     }
   }
 
   saveRoutine() {
-    if (!this.routine.name) return;
-    this.gymService.saveRoutine(this.routine);
+    if (!this.routine().name) return;
+    this.gymService.saveRoutine(this.routine());
     this.router.navigate(['/']);
   }
 
@@ -74,12 +73,18 @@ export class RoutineEditorComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: Exercise) => {
       if (result) {
-        this.routine.exercises.push(result);
+        this.routine.update((current: Routine) => {
+          const updated = { ...current, exercises: [...current.exercises, result] };
+          return updated;
+        });
       }
     });
   }
 
   deleteExercise(index: number) {
-    this.routine.exercises.splice(index, 1);
+    this.routine.update((current: Routine) => {
+      const updated = { ...current, exercises: current.exercises.filter((_, i) => i !== index) };
+      return updated;
+    });
   }
 }
