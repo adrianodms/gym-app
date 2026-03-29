@@ -87,4 +87,13 @@ export class RoutineEditorComponent implements OnInit {
       return updated;
     });
   }
+
+  moveExercise(index: number, direction: 'up' | 'down') {
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    this.routine.update((current: Routine) => {
+      const exercises = [...current.exercises];
+      [exercises[index], exercises[targetIndex]] = [exercises[targetIndex], exercises[index]];
+      return { ...current, exercises };
+    });
+  }
 }

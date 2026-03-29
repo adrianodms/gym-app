@@ -107,20 +107,27 @@
 
 .exercise-item__header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
-.exercise-item__name {
-  font-size: 1.25rem;
+.exercise-item__name-field {
+  flex: 1;
+}
+
+.exercise-item__name-field input {
+  font-size: 1.1rem;
   font-weight: 700;
-  color: #ffffff;
 }
 
-.exercise-item__delete-button {
-  /* Styled by Material theme */
+.exercise-item__order-buttons {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
+
+
 
 .exercise-item__form {
   display: grid;
@@ -218,7 +225,5 @@
     font-size: 1.5rem;
   }
 
-  .exercise-item__form {
-    /* Keep stack but refine if needed */
-  }
+
 }

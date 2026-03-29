@@ -42,11 +42,28 @@
                 @for (exercise of routine().exercises; track $index) {
                 <div class="exercise-item">
                     <div class="exercise-item__header">
-                        <span class="exercise-item__name">{{ exercise.name }}</span>
-                        <button mat-icon-button color="warn" (click)="deleteExercise($index)"
-                            class="exercise-item__delete-button">
-                            <mat-icon>delete</mat-icon>
-                        </button>
+                        <mat-form-field appearance="fill" class="exercise-item__name-field">
+                            <mat-label>Nome</mat-label>
+                            <input matInput [(ngModel)]="exercise.name" placeholder="Nome do exercício">
+                        </mat-form-field>
+                        <div class="exercise-item__order-buttons">
+                            <button mat-icon-button (click)="moveExercise($index, 'up')"
+                                [disabled]="$index === 0"
+                                class="exercise-item__order-button"
+                                aria-label="Mover para cima">
+                                <mat-icon>arrow_upward</mat-icon>
+                            </button>
+                            <button mat-icon-button (click)="moveExercise($index, 'down')"
+                                [disabled]="$index === routine().exercises.length - 1"
+                                class="exercise-item__order-button"
+                                aria-label="Mover para baixo">
+                                <mat-icon>arrow_downward</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" (click)="deleteExercise($index)"
+                                class="exercise-item__delete-button">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="exercise-item__form">
