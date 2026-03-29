@@ -62,6 +62,21 @@ export class GymService {
     });
   }
 
+  upsertWorkoutLog(log: WorkoutLog): void {
+    this.history.update((current: WorkoutLog[]) => {
+      const index = current.findIndex(h => h.id === log.id);
+      let updated: WorkoutLog[];
+      if (index >= 0) {
+        updated = [...current];
+        updated[index] = log;
+      } else {
+        updated = [...current, log];
+      }
+      localStorage.setItem(this.HISTORY_KEY, JSON.stringify(updated));
+      return updated;
+    });
+  }
+
   getLastLogForRoutine(routineId: string): WorkoutLog | undefined {
     // Computed could be used here if this was a property, but as a method it accesses the current signal value
     return this.history()

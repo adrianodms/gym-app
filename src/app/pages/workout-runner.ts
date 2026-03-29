@@ -83,17 +83,23 @@ export class WorkoutRunnerComponent implements OnInit, OnDestroy {
     this.currentExerciseIndex = index;
     const exercise = this.routine.exercises[index];
     
-    // Check if we have history for this exercise
-    const lastLog = this.gymService.getLastLogForRoutine(this.routine.id);
-    const lastExerciseSets = lastLog?.exercises[exercise.name];
+    // Check current session data first (user navigated back to a visited exercise)
+    const sessionSets = this.workoutLog?.exercises[exercise.name];
+    if (sessionSets) {
+      this.activeExerciseSets = sessionSets.map(s => ({ ...s }));
+    } else {
+      // Fall back to last historical log
+      const lastLog = this.gymService.getLastLogForRoutine(this.routine.id);
+      const lastExerciseSets = lastLog?.exercises[exercise.name];
 
-    this.activeExerciseSets = [];
-    for (let i = 0; i < exercise.sets; i++) {
-      this.activeExerciseSets.push({
-        weight: lastExerciseSets ? lastExerciseSets[i]?.weight : (exercise.targetWeight || 0),
-        reps: lastExerciseSets ? lastExerciseSets[i]?.reps : (exercise.reps || 0),
-        completed: false
-      });
+      this.activeExerciseSets = [];
+      for (let i = 0; i < exercise.sets; i++) {
+        this.activeExerciseSets.push({
+          weight: lastExerciseSets ? lastExerciseSets[i]?.weight : (exercise.targetWeight || 0),
+          reps: lastExerciseSets ? lastExerciseSets[i]?.reps : (exercise.reps || 0),
+          completed: false
+        });
+      }
     }
 
     // Initialize rest timer suggestion
@@ -145,6 +151,7 @@ export class WorkoutRunnerComponent implements OnInit, OnDestroy {
   prevExercise() {
     if (this.currentExerciseIndex > 0) {
       this.saveCurrentExerciseData();
+      if (this.workoutLog) this.gymService.upsertWorkoutLog(this.workoutLog);
       this.initializeExercise(this.currentExerciseIndex - 1);
     }
   }
@@ -152,6 +159,7 @@ export class WorkoutRunnerComponent implements OnInit, OnDestroy {
   nextExercise() {
     if (!this.routine) return;
     this.saveCurrentExerciseData();
+    if (this.workoutLog) this.gymService.upsertWorkoutLog(this.workoutLog);
     
     if (this.currentExerciseIndex < this.routine.exercises.length - 1) {
       this.initializeExercise(this.currentExerciseIndex + 1);
